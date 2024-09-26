@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.quartz.mapper.EmailConfigMapper">
+    
+    <resultMap type="com.ruoyi.quartz.domain.EmailConfig" id="SysConfigResult">
+    	<id     property="emailConfigId"      column="email_config_id"      />
+        <result property="defaultEncoding"    column="default_encoding"    />
+        <result property="host"     column="host"     />
+        <result property="username"   column="username"   />
+        <result property="password"    column="password"    />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <select id="getById" resultMap="SysConfigResult">
+        select * from email_config where email_config_id=#{emailConfigId}
+    </select>
+</mapper>

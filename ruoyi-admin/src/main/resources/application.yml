@@ -16,7 +16,7 @@ ruoyi:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
-  port: 80
+  port: 8088
   servlet:
     # 应用的访问路径
     context-path: /
@@ -72,6 +72,25 @@ spring:
     restart:
       # 热部署开关
       enabled: true
+
+  # 邮箱配置
+  mail:
+    default-encoding: UTF-8
+    host: smtp.qq.com
+    username: 1484312422@qq.com
+    password: ubrhrarshjgujaia
+#    host: smtp.163.com
+#    username: 15082475079@163.com
+#    password: LNRM23BVy4Qgx82G
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+          starttls:
+            enable: true
 
 # MyBatis
 mybatis:
