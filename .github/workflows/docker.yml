@@ -13,7 +13,7 @@ jobs:
       # 此处可修改为你任意 docker 镜像仓库地址和用户名
       DOCKER_NAME: joker_xiali/spring_demo
       # 此处可修改为你任意 docker 镜像仓库地址和用户名
-      DOCKER_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+      DOCKER_REGISTRY: crpi-9mzxaa7skdindffj.cn-chengdu.personal.cr.aliyuncs.com
       DOCKER_USERNAME: 兜兜里没有糖呀
 
     steps:
