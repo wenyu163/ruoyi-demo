@@ -1,5 +1,5 @@
 # 使用官方Java运行时作为父镜像
-FROM adoptopenjdk/openjdk17:jre-hotspot AS build
+FROM openjdk:17 AS build
 
 # 设置工作目录
 WORKDIR /workspace
@@ -12,7 +12,7 @@ COPY . .
 RUN mvn $MAVEN_CLI_OPTS clean package
 
 # 转换阶段以构建最终镜像
-FROM adoptopenjdk/openjdk17:jre-hotspot
+FROM openjdk:17
 VOLUME ["/tmp"]
 COPY --from=build /workspace/ruoyi-admin/target/ruoyi-admin.jar app.jar
 
