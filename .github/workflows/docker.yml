@@ -55,5 +55,5 @@ jobs:
       # 推送镜像到 Docker 仓库
       - name: 推送镜像到仓库
         run: |
-          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:${{ github.sha }}
-          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:latest
+          docker push  ${{ secrets.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:${{ github.sha }}
+          docker push  ${{ secrets.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:latest
