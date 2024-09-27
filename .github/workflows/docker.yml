@@ -12,7 +12,9 @@ jobs:
     env:
       # 此处可修改为你任意 docker 镜像仓库地址和用户名
       DOCKER_NAME: joker_xiali/spring_demo
-
+      # 此处可修改为你任意 docker 镜像仓库地址和用户名
+      DOCKER_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+      DOCKER_USERNAME: 兜兜里没有糖呀
 
     steps:
       - name: 拉取最新提交的代码
@@ -36,34 +38,37 @@ jobs:
       - name: 项目打包
         run: mvn -B package
 
-      - name: 打包镜像
+      # 登录镜像仓库
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 生成名称和版本，例如 seepine/springboot-demo ，由发布 v1.2.5 触发，则分别为
+      # REPO_NAME=springboot-demo
+      # REPO_VERSION=1.2.5
+      - name: Get Meta
+        id: meta
         run: |
-          docker build -t ${{ env.DOCKER_NAME }}:${{ github.sha }} .
-          docker tag  ${{ env.DOCKER_NAME }}:${{ github.sha }} ${{ env.DOCKER_NAME }}:latest
-          docker images  # 查看当前本地镜像
-          
+          echo REPO_NAME=$(echo ${GITHUB_REPOSITORY} | awk -F"/" '{print $2}') >> $GITHUB_OUTPUT
+          echo REPO_VERSION=$(echo ${{ github.ref }} | awk -F"/" '{print $3}' | awk -F"v" '{print $2}') >> $GITHUB_OUTPUT  
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Alibaba Cloud Container Registry
-        env:
-          REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-          USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          PASSWORD: ${{ secrets.DOCKER_PASSWORD  }}
-        run: echo "${{ secrets.DOCKER_PASSWORD  }}" | docker login --username=${{ secrets.DOCKER_USERNAME }}  ${{ secrets.DOCKER_REGISTRY }} --password-stdin
-
-      # 打印镜像信息
-      - name: 打印镜像信息
-        run: |
-          echo "DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}"
-          echo "Image Name: ${{ env.DOCKER_NAME }}:${{ github.sha }}"
-          echo "Image Name (latest):  ${{ env.DOCKER_NAME }}:latest"      
-
-      # 推送镜像到 Docker 仓库
-      - name: 推送镜像到仓库
-        run: |
-          # 将最新的镜像标签到目标仓库
-          docker tag ${{ secrets.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:${{ github.sha }} ${{ secrets.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:latest
-          docker push  ${{ secrets.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:${{ github.sha }}
-          docker push  ${{ secrets.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:latest
+      # 打包构建
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: |
+            linux/amd64
+            linux/arm64
+          push: true
+          # 即最终打包成例如 registry.cn-hangzhou.aliyuncs.com/seepine/springboot-demo:latest
+          # 和 registry.cn-hangzhou.aliyuncs.com/seepine/springboot-demo:1.2.5
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/${{ steps.meta.outputs.REPO_NAME }}:latest
+            ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.REPO_VERSION }}
+          cache-from: type=local,src=/opt/dockercache/.buildx-${{ steps.meta.outputs.REPO_NAME }}-cache
+          cache-to: type=local,dest=/opt/dockercache/.buildx-${{ steps.meta.outputs.REPO_NAME }}-cache-new,mode=max
