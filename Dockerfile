@@ -1,5 +1,5 @@
 # 基于 OpenJDK 17
-FROM openjdk:17-jdk-slim
+FROM openjdk:17
 
 ## 设置进入容器时的工作目录
 WORKDIR /root/app
