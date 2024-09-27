@@ -24,7 +24,7 @@ jobs:
         with:
           distribution: zulu
           java-version: 17
-          # 缓存gradle，若是使用maven构建，改为maven即可，具体可查看 https://github.com/actions/setup-java
+          # 缓存gradle，若是使用maven构建，改为maven即可，具体可查看 https://github.com/actions/setup-java 3
           cache: maven
 
       - name: 项目打包
