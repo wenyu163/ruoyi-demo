@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # 此处可修改为你任意 docker 镜像仓库地址和用户名
-      DOCKER_REGISTRY: registry.cn-hangzhou.aliyuncs.com
-      DOCKER_USERNAME: seepine
+      DOCKER_NAME: joker_xiali/spring_demo
+
 
     steps:
       - name: 拉取最新提交的代码
@@ -38,8 +38,8 @@ jobs:
 
       - name: 打包镜像
         run: |
-          docker build -t username/my-app:${{ github.sha }} .
-          docker tag username/my-app:${{ github.sha }} username/my-app:latest
+          docker build -t ${{ env.DOCKER_NAME }}:${{ github.sha }} .
+          docker tag  ${{ env.DOCKER_NAME }}:${{ github.sha }} ${{ env.DOCKER_NAME }}:latest
           
 
       - name: Set up Docker Buildx
@@ -55,5 +55,5 @@ jobs:
       # 推送镜像到 Docker 仓库
       - name: 推送镜像到仓库
         run: |
-          docker push ${{ env.DOCKER_REGISTRY }}/username/my-app:${{ github.sha }}
-          docker push ${{ env.DOCKER_REGISTRY }}/username/my-app:latest
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:${{ github.sha }}
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAME }}:latest
