@@ -43,7 +43,7 @@ jobs:
           
 
        # 登录镜像仓库
-      - name: 登录镜像仓库 ${{ env.DOCKER_REGISTRY }}
+      - name: 登录镜像仓库 ${{ secrets.DOCKER_PASSWORD }}
         uses: docker/login-action@v2
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
