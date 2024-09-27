@@ -1,5 +1,5 @@
-## 设置基础镜像
-FROM openjdk:17
+# 基于 OpenJDK 17
+FROM openjdk:17-jdk-slim
 
 ## 设置进入容器时的工作目录
 WORKDIR /root/app

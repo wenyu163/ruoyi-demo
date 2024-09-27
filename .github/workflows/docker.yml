@@ -9,10 +9,29 @@ on:
 jobs:
   develop_build:
     runs-on: ubuntu-latest
+    container:
+      # 使用支持docker的act镜像
+      image: seepine/ubuntu:act
+      volumes:
+        # 缓存docker构建步骤
+        - ubuntu_dockercache:/opt/dockercache
+    env:
+      # 此处可修改为你任意 docker 镜像仓库地址和用户名
+      DOCKER_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+      DOCKER_USERNAME: seepine
+
     steps:
       - name: 拉取最新提交的代码
         uses: actions/checkout@v3
 
+      # java环境
+      - name: 设置java环境
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 17
+          # 缓存gradle，若是使用maven构建，改为maven即可，具体可查看 https://github.com/actions/setup-java
+          cache: maven
 
       - name: 项目打包
         run: mvn -B package
