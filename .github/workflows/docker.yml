@@ -38,13 +38,15 @@ jobs:
       - name: 项目打包
         run: mvn -B package
 
-      # 登录镜像仓库
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Alibaba Cloud Container Registry
+        env:
+          REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_PASSWORD  }}
+        run: echo "${{ secrets.DOCKER_PASSWORD  }}" | docker login --username=${{ secrets.DOCKER_USERNAME }}  ${{ secrets.DOCKER_REGISTRY }} --password-stdin
 
       # 生成名称和版本，例如 seepine/springboot-demo ，由发布 v1.2.5 触发，则分别为
       # REPO_NAME=springboot-demo
