@@ -13,16 +13,10 @@ jobs:
       - name: 拉取最新提交的代码
         uses: actions/checkout@v3
 
-      - name: 设置jdk
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-          cache: 'maven'
 
-      - name: 项目打包
-        run: mvn -B package
+      - name: 打包镜像
+        run: |
+          docker build -t username/my-app:${{ github.sha }} .
+          docker tag username/my-app:${{ github.sha }} username/my-app:latest
 
-      - name: 删除旧的jar包以及运行脚本
-        run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd /root/GitHub_Action && rm -rf ./*"
 
