@@ -40,6 +40,7 @@ jobs:
         run: |
           docker build -t ${{ env.DOCKER_NAME }}:${{ github.sha }} .
           docker tag  ${{ env.DOCKER_NAME }}:${{ github.sha }} ${{ env.DOCKER_NAME }}:latest
+          docker images  # 查看当前本地镜像
           
 
       - name: Set up Docker Buildx
@@ -51,6 +52,13 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD  }}
         run: echo "${{ secrets.DOCKER_PASSWORD  }}" | docker login --username=${{ secrets.DOCKER_USERNAME }}  ${{ secrets.DOCKER_REGISTRY }} --password-stdin
+
+      # 打印镜像信息
+      - name: 打印镜像信息
+        run: |
+          echo "DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}"
+          echo "Image Name: username/my-app:${{ github.sha }}"
+          echo "Image Name (latest): username/my-app:latest"      
 
       # 推送镜像到 Docker 仓库
       - name: 推送镜像到仓库
