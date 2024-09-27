@@ -1,5 +1,5 @@
 # 使用官方Java运行时作为父镜像
-FROM openjdk:17 AS build
+FROM maven:3.8.6-openjdk-17 AS build
 
 # 设置工作目录
 WORKDIR /workspace
