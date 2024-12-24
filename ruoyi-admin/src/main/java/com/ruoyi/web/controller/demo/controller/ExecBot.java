@@ -20,18 +20,23 @@ import java.io.InputStreamReader;
 public class ExecBot extends TelegramLongPollingBot {
 
 
-    @Autowired
-    private ISysConfigService sysConfigService;
-
+//    @Autowired
+//    private ISysConfigService sysConfigService;
+//
 
 
 
     //复制
-    @Value("${tg.token}")
+//    @Value("${tg.token}")
     private String token = "";
-    @Value("${tg.username}")
+//    @Value("${tg.username}")
     private String username  = "";
 
+    @Autowired
+    public ExecBot(ISysConfigService sysConfigService) {
+        this.token =  sysConfigService.selectConfigByKey("tg.token");
+        this.username = sysConfigService.selectConfigByKey("tg.username");
+    }
 
     public ExecBot() {
         this( new DefaultBotOptions());
