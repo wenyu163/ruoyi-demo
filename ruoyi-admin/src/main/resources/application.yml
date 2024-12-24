@@ -159,3 +159,9 @@ xss:
 swagger:
   # 是否开启swagger
   enabled: true
+
+
+# tg机器人
+tg:
+  token: 123
+  username: 456

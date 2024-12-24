@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.demo.controller;
 
 import com.ruoyi.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -22,9 +23,15 @@ public class ExecBot extends TelegramLongPollingBot {
     @Autowired
     private ISysConfigService sysConfigService;
 
-    //填你自己的token和username
-    private String token = sysConfigService.selectConfigByKey("tg.token");
-    private String username  = sysConfigService.selectConfigByKey("tg.username");
+
+
+
+    //复制
+    @Value("${tg.token}")
+    private String token = "";
+    @Value("${tg.username}")
+    private String username  = "";
+
 
     public ExecBot() {
         this( new DefaultBotOptions());
